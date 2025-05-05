@@ -35,11 +35,22 @@ public class SecurityConfig {
         http.authorizeHttpRequests(requests -> requests // Configures authorization for HTTP request
                 // Allows access to the registration page and the h2 console without being
                 // logged in
-                .requestMatchers("/register", "/h2-console/**").permitAll()
+        		.requestMatchers("/register", "/login").permitAll()
+        		.requestMatchers("/h2-console/**").access((auth, context) -> {
+        		    var authentication = auth.get();
+        		    return authentication != null && authentication.getName().equals("David")
+        		        ? new org.springframework.security.authorization.AuthorizationDecision(true)
+        		        : new org.springframework.security.authorization.AuthorizationDecision(false);
+        		})
                 // All other pages require authentication
                 .anyRequest().authenticated())
                 // Redirect to homepage after login
-                .formLogin(login -> login.defaultSuccessUrl("/", true))
+		        .formLogin(form -> form
+		        	    .loginPage("/login")               // Use the custom login page
+		        	    .loginProcessingUrl("/login")      // Endpoint that Spring Security intercepts
+		        	    .defaultSuccessUrl("/", true)      // Where to go after successful login
+		        	    .permitAll()
+		        	)
                 // Enables log out for authenticated users
                 .logout(logout -> logout.permitAll());
 

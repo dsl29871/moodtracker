@@ -30,8 +30,8 @@ public class MoodController {
 	}
 
 	// Displays the home page of the application where users can add and review data
-	@GetMapping("/")
-	public String index(Model model, Authentication auth) {
+	@GetMapping("/home")
+	public String homePage(Model model, Authentication auth) {
 		// Retrieve the logged in user
 		String username = auth.getName();
 		// Throw exception if the user is not found

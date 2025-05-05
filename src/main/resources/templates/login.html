@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - MoodTracker</title>
+    <title>Login - MoodTracker</title>
     <style>
         body {
             background-color: #121212;
@@ -44,7 +44,7 @@
             width: 100%;
         }
 
-		.toggle-password {
+        .toggle-password {
 		    position: absolute;
 		    right: 12px;
 		    top: 50%;
@@ -87,27 +87,36 @@
         a:hover {
             text-decoration: underline;
         }
+
+        .error {
+            color: #f44336;
+            text-align: center;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
 
-<h2>Create Your MoodTracker Account</h2>
+<h2>Login to MoodTracker</h2>
 
 <div class="form-box">
-    <form th:action="@{/register}" th:object="${user}" method="post">
+    <form th:action="@{/login}" method="post">
         <label for="username">Username</label>
-        <input type="text" id="username" th:field="*{username}" placeholder="Choose a username" required />
+        <input type="text" id="username" name="username" placeholder="Enter your username" required />
 
         <label for="password">Password</label>
         <div class="password-container">
-            <input type="password" id="password" th:field="*{password}" placeholder="Choose a password" required />
+            <input type="password" id="password" name="password" placeholder="Enter your password" required />
             <span class="toggle-password" onclick="togglePassword(this)">Show</span>
         </div>
 
-        <button type="submit">Register</button>
+        <button type="submit">Login</button>
     </form>
 
-    <p>Already registered? <a th:href="@{/login}">Login here</a>.</p>
+    <p>Don't have an account? <a th:href="@{/register}">Register here</a>.</p>
+
+    <div th:if="${param.error}" class="error">Invalid username or password</div>
+    <div th:if="${param.logout}" class="error">You have been logged out</div>
 </div>
 
 <script>
