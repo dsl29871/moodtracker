@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register - MoodTracker</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 40px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #90caf9;
+            margin-bottom: 30px;
+        }
+
+        .form-box {
+            background-color: #1f1f1f;
+            padding: 30px;
+            max-width: 400px;
+            margin: auto;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(144, 202, 249, 0.2);
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 15px 0;
+            border: 1px solid #444;
+            border-radius: 6px;
+            background-color: #2c2c2c;
+            color: #e0e0e0;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #90caf9;
+            border: none;
+            color: #000;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #64b5f6;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        a {
+            color: #90caf9;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+<h2>Create Your MoodTracker Account</h2>
+
+<div class="form-box">
+    <form th:action="@{/register}" th:object="${user}" method="post">
+        <label for="username">Username</label>
+        <input type="text" id="username" th:field="*{username}" placeholder="Choose a username" required />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" th:field="*{password}" placeholder="Choose a password" required />
+
+        <button type="submit">Register</button>
+    </form>
+
+    <p>Already registered? <a th:href="@{/login}">Login here</a>.</p>
+</div>
+
+</body>
+</html>
