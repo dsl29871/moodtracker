@@ -46,29 +46,34 @@ public class MoodController {
 
 	// Processes the form the record a new log for a daily mood
 	@PostMapping("/add")
-	public String addMood(@RequestParam String moodLevel, @RequestParam String note,
-			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timestamp, Authentication auth) {
+	public String addMood(@RequestParam String moodLevel,
+	                      @RequestParam String note,
+	                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timestamp,
+	                      Authentication auth) {
+	    // Get the logged-in user
+	    String username = auth.getName();
+	    User user = userRepo.findByUsername(username).orElseThrow();
 
-		// Get the logged-in user
-		String username = auth.getName();
-		User user = userRepo.findByUsername(username).orElseThrow();
+	    // Define start/end of selected day
+	    LocalDateTime start = timestamp.atStartOfDay();
+	    LocalDateTime end = timestamp.atTime(LocalTime.MAX);
 
-		// Define start/end of selected day
-		LocalDateTime start = timestamp.atStartOfDay();
-		LocalDateTime end = timestamp.atTime(LocalTime.MAX);
+	    // <<< UPDATE THIS BLOCK >>>
+	    moodRepo.findByUserAndTimestampBetween(user, start, end)
+	            .ifPresent(existing -> {
+	                moodRepo.delete(existing);
+	                moodRepo.flush(); // Ensures DB writes deletion before insert
+	            });
 
-		// Delete any existing mood for that user on that day
-		moodRepo.findByUserAndTimestampBetween(user, start, end)
-				.ifPresent(existing -> moodRepo.deleteById(existing.getId()));
+	    // Save the new mood entry
+	    Mood mood = new Mood(moodLevel, note);
+	    mood.setTimestamp(start);
+	    mood.setUser(user);
+	    moodRepo.save(mood);
 
-		// Save the new entry
-		Mood mood = new Mood(moodLevel, note);
-		mood.setTimestamp(start);
-		mood.setUser(user);
-		moodRepo.save(mood);
-
-		return "redirect:/";
+	    return "redirect:/";
 	}
+
 
 	// Deletes an entry based on the ID number so it can be replaced
 	@PostMapping("/delete/{id}")

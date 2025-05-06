@@ -17,6 +17,7 @@ public interface MoodRepository extends JpaRepository<Mood, Long> {
 	// Finds a mood entry between two specified DateTime values.
 	Optional<Mood> findByUserAndTimestampBetween(User user, LocalDateTime start, LocalDateTime end);
 
+
 	// Find all entries for the user sorted by timestamp
 	List<Mood> findAllByUserOrderByTimestampAsc(User user);
 
