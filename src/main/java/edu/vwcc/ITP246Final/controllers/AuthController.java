@@ -37,12 +37,17 @@ public class AuthController {
 
 	// Process the user form data
 	@PostMapping("/register")
-	public String registerUser(@ModelAttribute User user) {
-		// Encrypt the password given from the register form
-		user.setPassword(encoder.encode(user.getPassword()));
-		// Save the user to the db
-		userRepo.save(user);
-		// Redirect user to the login page
-		return "redirect:/login";
+	public String registerUser(@ModelAttribute User user, Model model) {
+	    // Check if the username is already taken
+	    if (userRepo.findByUsername(user.getUsername()).isPresent()) {
+	        model.addAttribute("user", user); // repopulate form with entered data
+	        model.addAttribute("error", "Username already exists. Please choose another.");
+	        return "register"; // stay on the registration page
+	    }
+
+	    // Encrypt and save the user
+	    user.setPassword(encoder.encode(user.getPassword()));
+	    userRepo.save(user);
+	    return "redirect:/login";
 	}
 }

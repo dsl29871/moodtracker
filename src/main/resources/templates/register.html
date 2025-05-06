@@ -95,6 +95,10 @@
 
 <div class="form-box">
     <form th:action="@{/register}" th:object="${user}" method="post">
+		<div th:if="${error}" class="error-message">
+		    <p th:text="${error}"></p>
+		</div>
+		    
         <label for="username">Username</label>
         <input type="text" id="username" th:field="*{username}" placeholder="Choose a username" required />
 

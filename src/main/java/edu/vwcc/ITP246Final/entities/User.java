@@ -9,7 +9,8 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	// Ensure that the username is not duplicated
+	@Column(unique = true)
 	private String username;
 	// Store hashed password
 	private String password;
